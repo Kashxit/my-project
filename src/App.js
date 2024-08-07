@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Board from './pages/Board';
+import Header from './components/Header';
 
-function App() {
+const App = () => {
+  const [issues, setIssues] = useState([]);
+  const [issueToEdit, setIssueToEdit] = useState(null);
+
+  const handleAddOrUpdateIssue = (issue) => {
+    if (issueToEdit) {
+      setIssues(issues.map(i => i.id === issue.id ? issue : i));
+      setIssueToEdit(null);
+    } else {
+      setIssues([...issues, issue]);
+    }
+  };
+
+  const handleDeleteIssue = (id) => {
+    setIssues(issues.filter(issue => issue.id !== id));
+  };
+
+  const handleEditIssue = (issue) => {
+    setIssueToEdit(issue);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <Board
+        issues={issues}
+        onAddOrUpdateIssue={handleAddOrUpdateIssue}
+        onDeleteIssue={handleDeleteIssue}
+        onEditIssue={handleEditIssue}
+        issueToEdit={issueToEdit}
+      />
     </div>
   );
-}
+};
 
 export default App;
